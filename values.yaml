@@ -7,7 +7,8 @@ replicaCount: 1
 image:
   repository: drnic/homekube-self-reflection
   tag: latest
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
+  # pullPolicy: IfNotPresent
 
 imagePullSecrets: []
 nameOverride: ""
