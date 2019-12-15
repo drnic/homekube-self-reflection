@@ -33,9 +33,8 @@ kubectl run --rm -i self-reflection \
 I'm using `docker buildx` to create multi-arch images so the image can run on Raspberry Pis (armv7), arm64, or common amd64 (Intel/AMD).
 
 ```plain
-registry_org=docker.io/drnic
 docker buildx build \
   --platform linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6 \
-  --tag $registry_org/homekube-self-reflection \
+  --tag docker.io/drnic/homekube-self-reflection \
   --push .
 ```
