@@ -2,10 +2,8 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"os"
 	"path/filepath"
-	"time"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
@@ -20,6 +18,9 @@ import (
 	// _ "k8s.io/client-go/plugin/pkg/client/auth/gcp"
 	// _ "k8s.io/client-go/plugin/pkg/client/auth/oidc"
 	// _ "k8s.io/client-go/plugin/pkg/client/auth/openstack"
+
+	"github.com/go-martini/martini"
+	"github.com/martini-contrib/render"
 )
 
 func main() {
@@ -51,17 +52,19 @@ func main() {
 	if err != nil {
 		panic(err.Error())
 	}
-	for {
-		// get pods in all the namespaces by omitting namespace
-		// Or specify namespace to get pods in particular namespace
+
+	m := martini.Classic()
+	m.Use(render.Renderer())
+
+	m.Get("/", func(r render.Render) {
 		nodes, err := clientset.CoreV1().Nodes().List(metav1.ListOptions{})
 		if err != nil {
 			panic(err.Error())
 		}
-		fmt.Printf("There are %d nodes in the cluster\n", len(nodes.Items))
+		r.JSON(200, nodes)
+	})
 
-		time.Sleep(10 * time.Second)
-	}
+	m.Run()
 }
 
 func homeDir() string {
